@@ -9,19 +9,20 @@ export const Contacts = () => {
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch("https://randomuser.me/api/?results=200")
-      .then((response) => response.json())
-      .then(({ results }) => {
+    const getContacts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("https://randomuser.me/api/?results=200");
+        const { results } = await response.json();
         setContacts(results);
-        setIsLoading(false);
         setIsError(false);
-        console.log(results);
-      })
-      .catch(() => {
-        setIsLoading(false);
+      } catch (e) {
         setIsError(true);
-      });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getContacts();
   }, []);
 
   // build interface
@@ -33,5 +34,5 @@ export const Contacts = () => {
     return <div>...error</div>;
   }
 
-  return <div>Contacts {contacts[0].name.first}</div>;
+  return <div> Contacts {contacts[0].name.first} </div>;
 };
