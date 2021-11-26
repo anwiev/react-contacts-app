@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
-export const Contacts = () => {
+const useContacts = () => {
   // array where we get contacts
-  const [contacts, setContacts] = useState([]);
+  const [data, setData] = useState([]);
   // loading status
   const [isLoading, setIsLoading] = useState(true);
   // error status
@@ -17,7 +17,7 @@ export const Contacts = () => {
         if (error) {
           throw new Error(error);
         }
-        setContacts(results);
+        setData(results);
         setIsError(false);
       } catch (error) {
         setIsError(true);
@@ -28,14 +28,23 @@ export const Contacts = () => {
     getContacts();
   }, []);
 
+  return {
+    data,
+    isLoading,
+    isError,
+  };
+};
+
+export const Contacts = () => {
+  const contacts = useContacts();
   // build interface
-  if (isLoading) {
+  if (contacts.isLoading) {
     return <div>...loading</div>;
   }
 
-  if (isError) {
+  if (contacts.isError) {
     return <div>...error</div>;
   }
 
-  return <div> Contacts {contacts[0].name.first} </div>;
+  return <div> Contacts {contacts.data[0].name.first} </div>;
 };
