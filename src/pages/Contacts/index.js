@@ -13,10 +13,13 @@ export const Contacts = () => {
       try {
         setIsLoading(true);
         const response = await fetch("https://randomuser.me/api/?results=200");
-        const { results } = await response.json();
+        const { results, error } = await response.json();
+        if (error) {
+          throw new Error(error);
+        }
         setContacts(results);
         setIsError(false);
-      } catch (e) {
+      } catch (error) {
         setIsError(true);
       } finally {
         setIsLoading(false);
